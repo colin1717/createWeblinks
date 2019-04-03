@@ -1,3 +1,7 @@
+#This script expects your Box App settings information saved in a file in this folder called config.json.  
+#You can get this file from your App's configuraiton settings in the Box dev console. 
+
+
 # Install SDK via pip
 # $ pip install boxsdk
 
