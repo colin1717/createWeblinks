@@ -9,9 +9,9 @@ from boxsdk import LoggingClient
 from boxsdk.exception import BoxAPIException
 
 #define service now form URL!!!!
-servicenowform_url = "https://www.test.com"
-servicenowform_title = "Request New Root Folder"
-servicenowform_description = "Click this link to request a new root level folder"
+weblink_url = "https://www.test.com"
+weblink_title = "Request New Root Folder"
+weblink_description = "Click this link to request a new root level folder"
 
 #configure JWT auth object
 sdk = JWTAuth.from_settings_file("./config.json")
@@ -38,7 +38,7 @@ for user in ent_users:
                 print(collection)
                 users[user.id] = {"collection_id": collection.id}
                 #add weblink to user and save ID in object
-                weblink_id = client.as_user(client.user(user.id)).folder(folder_id="0").create_web_link(servicenowform_url, servicenowform_title, servicenowform_description).id
+                weblink_id = client.as_user(client.user(user.id)).folder(folder_id="0").create_web_link(weblink_url, weblink_title, weblink_description).id
                 users[user.id]["weblink_id"] = weblink_id
 
 
