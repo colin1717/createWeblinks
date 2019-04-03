@@ -5,24 +5,18 @@
 # $pip install boxsdk[jwt]
 
 from boxsdk import JWTAuth
-from boxsdk import LoggingClient
+from boxsdk import Client
 from boxsdk.exception import BoxAPIException
+import json
 
-#define service now form URL!!!!
+#define Book mark information!!!!
 weblink_url = "https://www.test.com"
 weblink_title = "Request New Root Folder"
 weblink_description = "Click this link to request a new root level folder"
 
 #configure JWT auth object
 sdk = JWTAuth.from_settings_file("./config.json")
-client = LoggingClient(sdk)
-service_account = client.user().get()
-print('Service Account user name is {0}'.format(service_account.name))
-
-
-#create dict for all user information, user id will be key, favorite collection ID will be value
-users = {}
-
+client = Client(sdk)
 
 #get enterprise users and their favorties' collection ID and assign them the users object
 ent_users = client.users(user_type='all')
@@ -30,27 +24,26 @@ ent_users = client.users(user_type='all')
 for user in ent_users:
     print('{0} (User ID: {1})'.format(user.name, user.id))
 
-    #get user collection ID and add to users object
+    #try to access user's collections and get user's collection ID, this will return the ID of the favorites collection 
     if client.as_user(client.user(user.id)).collections():
         try: 
             users_collections = client.as_user(client.user(user.id)).collections()
             for collection in users_collections:
-                print(collection)
-                users[user.id] = {"collection_id": collection.id}
-                #add weblink to user and save ID in object
+                
+                #add weblink to user 
                 weblink_id = client.as_user(client.user(user.id)).folder(folder_id="0").create_web_link(weblink_url, weblink_title, weblink_description).id
-                users[user.id]["weblink_id"] = weblink_id
+                #add weblink to favorites
+                client.as_user(client.user(user.id)).make_request(
+                    'PUT',
+                    'https://api.box.com/2.0/web_links/{0}'.format(weblink_id),
+                    data = json.dumps({"collections": [{"id": collection.id}]})
+                )
 
 
         except BoxAPIException as e:
             print(e.message)
 
 
-
-print('users object')
-print(users)
-
-#For each user create new weblink
 
 
     
