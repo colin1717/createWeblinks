@@ -1,5 +1,8 @@
 #This script expects your Box App settings information saved in a file in this folder called config.json.  
-#You can get this file from your App's configuraiton settings in the Box dev console. 
+#You can get this file from your App's configuraiton settings in the Box dev console -  "Add and manage public keys"
+#Application Access for the App needs to be set to "Enterprise"
+#Advanced Features: "Perfom actions as users" should be enabled. 
+#This app will need to be authorized by an admin under Enterprise settings > Apps
 
 
 # Install SDK via pip
